@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HiHub Agent - Lead Qualification System</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+            color: white;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+        .container {
+            max-width: 800px;
+            text-align: center;
+        }
+        .logo {
+            width: 80px;
+            height: 80px;
+            background: linear-gradient(135deg, #F7941D 0%, #E85D04 100%);
+            border-radius: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 30px;
+            font-size: 40px;
+            font-weight: bold;
+        }
+        h1 {
+            font-size: 48px;
+            margin-bottom: 20px;
+            background: linear-gradient(135deg, #F7941D 0%, #E85D04 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        p {
+            font-size: 18px;
+            color: #a0a0a0;
+            margin-bottom: 40px;
+            line-height: 1.6;
+        }
+        .status {
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            background: rgba(76, 175, 80, 0.1);
+            padding: 12px 24px;
+            border-radius: 50px;
+            margin-bottom: 40px;
+        }
+        .status-dot {
+            width: 12px;
+            height: 12px;
+            background: #4CAF50;
+            border-radius: 50%;
+            animation: pulse 2s infinite;
+        }
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.5; }
+        }
+        .endpoints {
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 16px;
+            padding: 30px;
+            margin-top: 40px;
+            text-align: left;
+        }
+        .endpoints h2 {
+            color: #F7941D;
+            margin-bottom: 20px;
+            font-size: 24px;
+        }
+        .endpoint {
+            background: rgba(255, 255, 255, 0.03);
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 15px;
+            border-left: 3px solid #F7941D;
+        }
+        .endpoint code {
+            color: #4CAF50;
+            font-family: 'Courier New', monospace;
+        }
+        .endpoint p {
+            font-size: 14px;
+            margin: 5px 0 0 0;
+        }
+        .cta {
+            display: inline-block;
+            background: linear-gradient(135deg, #F7941D 0%, #E85D04 100%);
+            color: white;
+            padding: 15px 40px;
+            border-radius: 50px;
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 16px;
+            margin-top: 20px;
+            transition: transform 0.2s;
+        }
+        .cta:hover {
+            transform: translateY(-2px);
+        }
+        .info-box {
+            background: rgba(247, 148, 29, 0.1);
+            border: 1px solid rgba(247, 148, 29, 0.3);
+            border-radius: 12px;
+            padding: 20px;
+            margin-top: 30px;
+        }
+        .info-box h3 {
+            color: #F7941D;
+            margin-bottom: 10px;
+        }
+        .info-box p {
+            font-size: 14px;
+            margin: 0;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="logo">H</div>
+        <h1>HiHub Agent API</h1>
+        <p>Sistema de calificación de leads con IA para HiHub Global Technologies</p>
+        
+        <div class="status">
+            <span class="status-dot"></span>
+            <span>API Running</span>
+        </div>
+
+        <div class="endpoints">
+            <h2>📡 API Endpoints</h2>
+            
+            <div class="endpoint">
+                <code>POST /api/chat</code>
+                <p>Chat con el agente AI (GPT-4o con vision)</p>
+            </div>
+            
+            <div class="endpoint">
+                <code>GET /api/calendar/slots</code>
+                <p>Obtener slots de calendario disponibles</p>
+            </div>
+            
+            <div class="endpoint">
+                <code>POST /api/calendar/book</code>
+                <p>Agendar una cita con el equipo de sourcing</p>
+            </div>
+            
+            <div class="endpoint">
+                <code>POST /api/whatsapp/webhook</code>
+                <p>Webhook para mensajes de WhatsApp Business</p>
+            </div>
+            
+            <div class="endpoint">
+                <code>GET /health</code>
+                <p>Health check del servidor</p>
+            </div>
+        </div>
+
+        <div class="info-box">
+            <h3>💬 Prueba el Chat Widget</h3>
+            <p>Haz clic en el botón naranja en la esquina inferior derecha para probar el chat con Sofía, nuestra asistente de sourcing.</p>
+        </div>
+
+        <a href="https://github.com/hihubglobal/agent" class="cta">Ver Documentación</a>
+    </div>
+
+    <!-- Load Chat Widget -->
+    <script src="/widget.js"></script>
+</body>
+</html>

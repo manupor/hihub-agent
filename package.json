@@ -1,0 +1,23 @@
+{
+  "name": "hihub-agent",
+  "version": "1.0.0",
+  "description": "Lead qualification agent for HiHub Global - Web chat and WhatsApp integration",
+  "main": "server.js",
+  "type": "module",
+  "scripts": {
+    "start": "node server.js",
+    "dev": "node server.js"
+  },
+  "dependencies": {
+    "express": "^4.18.2",
+    "cors": "^2.8.5",
+    "dotenv": "^16.3.1",
+    "openai": "^4.28.0",
+    "pg": "^8.11.3",
+    "twilio": "^5.0.0",
+    "resend": "^2.1.0",
+    "axios": "^1.6.2",
+    "uuid": "^9.0.1",
+    "date-fns": "^3.0.6"
+  }
+}
