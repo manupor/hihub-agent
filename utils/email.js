@@ -176,7 +176,7 @@ export const sendLeadReportEmail = async ({ leadId, report, appointment, message
 </html>`;
 
         const result = await resend.emails.send({
-            from: 'HiHub Agent <agent@hihubglobal.com>',
+            from: 'HiHub Agent <onboarding@resend.dev>',
             to: clientEmail,
             subject,
             html
@@ -214,7 +214,7 @@ export const sendConfirmationEmail = async ({ to, name, appointment }) => {
         </div>`;
 
         await resend.emails.send({
-            from: 'HiHub Global <info@hihubglobal.com>',
+            from: 'HiHub Global <onboarding@resend.dev>',
             to,
             subject: 'Your HiHub Sourcing Call is Confirmed',
             html
