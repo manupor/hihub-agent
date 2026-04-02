@@ -22,6 +22,12 @@ import whatsappRoutes from './api/whatsapp.js';
 import intakeRoutes from './api/intake.js';
 import reportsRoutes from './api/reports.js';
 import { initializeIntakeDatabase } from './db/intakeDb.js';
+import { spawn } from 'child_process';
+import { fileURLToPath } from 'url';
+import { sendReportsEmail } from './services/reportEmailer.js';
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
 dotenv.config();
 
@@ -247,7 +253,86 @@ app.post('/api/calendar/book', async (req, res) => {
         
         const report = await generateReport(messages);
 
-        // Send email to HiHub team
+        // Generate Excel and PDF reports
+        let reportsGenerated = false;
+        try {
+            const timestamp = Date.now();
+            const baseFilename = `cliente_${leadId || timestamp}`;
+            const outputDir = path.join(__dirname, 'output/reports');
+            
+            // Create output directory if it doesn't exist
+            if (!fs.existsSync(outputDir)) {
+                fs.mkdirSync(outputDir, { recursive: true });
+            }
+            
+            const excelPath = path.join(outputDir, `${baseFilename}.xlsx`);
+            const pdfPath = path.join(outputDir, `${baseFilename}.pdf`);
+
+            // Prepare data for Python script
+            const scriptData = {
+                messages: messages.map(m => ({ role: m.role, content: m.content })),
+                leadId,
+                excelPath,
+                pdfPath,
+                format: 'both'
+            };
+
+            // Execute Python script to generate reports
+            await new Promise((resolve, reject) => {
+                const pythonProcess = spawn('python3', [
+                    path.join(__dirname, 'reports/generate_report.py'),
+                    JSON.stringify(scriptData)
+                ]);
+
+                let pythonOutput = '';
+                let pythonError = '';
+
+                pythonProcess.stdout.on('data', (data) => {
+                    pythonOutput += data.toString();
+                });
+
+                pythonProcess.stderr.on('data', (data) => {
+                    pythonError += data.toString();
+                });
+
+                pythonProcess.on('close', (code) => {
+                    if (code !== 0) {
+                        console.error('Error generating reports:', pythonError);
+                        reject(new Error('Report generation failed'));
+                    } else {
+                        try {
+                            const result = JSON.parse(pythonOutput);
+                            console.log('✅ Reports generated successfully');
+                            
+                            // Send reports via email
+                            sendReportsEmail({
+                                leadId,
+                                userName,
+                                userEmail,
+                                excelPath,
+                                pdfPath,
+                                extractedData: result.data
+                            }).then(() => {
+                                console.log('✅ Reports sent to hihubtrade@outlook.com');
+                                reportsGenerated = true;
+                                resolve();
+                            }).catch(emailError => {
+                                console.error('❌ Error sending reports email:', emailError);
+                                resolve(); // Continue even if email fails
+                            });
+                        } catch (parseError) {
+                            console.error('Error parsing Python output:', parseError);
+                            reject(parseError);
+                        }
+                    }
+                });
+            });
+        } catch (reportError) {
+            console.error('Report generation error:', reportError);
+            // Continue with booking even if reports fail
+        }
+
+        // Send original email to HiHub team
         try {
             await sendLeadReportEmail({
                 leadId,
