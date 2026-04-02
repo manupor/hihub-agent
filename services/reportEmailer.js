@@ -7,7 +7,7 @@ const resend = new Resend(process.env.RESEND_API_KEY);
 /**
  * Envía reportes Excel y PDF por email cuando se agenda una llamada
  */
-export async function sendReportsEmail({ leadId, userName, userEmail, excelPath, pdfPath, extractedData }) {
+export async function sendReportsEmail({ leadId, userName, userEmail, excelPath, pdfPath, imagePaths = [], extractedData }) {
     try {
         // Leer archivos como attachments
         const attachments = [];
@@ -25,6 +25,19 @@ export async function sendReportsEmail({ leadId, userName, userEmail, excelPath,
             attachments.push({
                 filename: path.basename(pdfPath),
                 content: pdfContent
+            });
+        }
+
+        // Agregar imágenes de la conversación
+        if (imagePaths && imagePaths.length > 0) {
+            imagePaths.forEach((imagePath, index) => {
+                if (fs.existsSync(imagePath)) {
+                    const imageContent = fs.readFileSync(imagePath);
+                    attachments.push({
+                        filename: path.basename(imagePath),
+                        content: imageContent
+                    });
+                }
             });
         }
 
@@ -147,6 +160,7 @@ export async function sendReportsEmail({ leadId, userName, userEmail, excelPath,
                         <strong>📎 Archivos Adjuntos:</strong><br>
                         • Reporte Excel con toda la información<br>
                         • Reporte PDF profesional para compartir
+                        ${imagePaths && imagePaths.length > 0 ? `<br>• ${imagePaths.length} imagen(es) enviada(s) por el cliente` : ''}
                     </div>
                 </div>
 

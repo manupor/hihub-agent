@@ -262,6 +262,34 @@ app.post('/api/calendar/book', async (req, res) => {
             const excelPath = path.join(outputDir, `${baseFilename}.xlsx`);
             const pdfPath = path.join(outputDir, `${baseFilename}.pdf`);
 
+            // Extract and save images from messages
+            const imagePaths = [];
+            for (let i = 0; i < messages.length; i++) {
+                const msg = messages[i];
+                if (msg.image) {
+                    try {
+                        const imageFilename = `${baseFilename}_image_${i + 1}.jpg`;
+                        const imagePath = path.join(outputDir, imageFilename);
+                        
+                        // Convert base64 to buffer and save
+                        let imageData;
+                        if (msg.image.startsWith('data:image')) {
+                            // Remove data URL prefix
+                            imageData = msg.image.split(',')[1];
+                        } else {
+                            imageData = msg.image;
+                        }
+                        
+                        const imageBuffer = Buffer.from(imageData, 'base64');
+                        fs.writeFileSync(imagePath, imageBuffer);
+                        imagePaths.push(imagePath);
+                        console.log(`✅ Image ${i + 1} saved: ${imageFilename}`);
+                    } catch (imageError) {
+                        console.error(`Error saving image ${i + 1}:`, imageError);
+                    }
+                }
+            }
+
             // Prepare data for Python script
             const scriptData = {
                 messages: messages.map(m => ({ role: m.role, content: m.content })),
@@ -305,6 +333,7 @@ app.post('/api/calendar/book', async (req, res) => {
                                 userEmail,
                                 excelPath,
                                 pdfPath,
+                                imagePaths,
                                 extractedData: result.data
                             }).then(() => {
                                 console.log('✅ Reports sent to hihubtrade@outlook.com');
