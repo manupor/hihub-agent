@@ -176,7 +176,7 @@ export async function sendReportsEmail({ leadId, userName, userEmail, excelPath,
         // Enviar email con attachments
         const result = await resend.emails.send({
             from: 'HiHub Chat <onboarding@resend.dev>',
-            to: 'hihubtrade@outlook.com',
+            to: ['hihubtrade@outlook.com', 'manuelportuguezmora@gmail.com'],
             subject: `🎯 Nueva Llamada Agendada: ${userName || 'Cliente'} - ${extractedData.producto || 'Consulta'}`,
             html: htmlContent,
             attachments: attachments
