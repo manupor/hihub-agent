@@ -16,8 +16,11 @@ import { systemPrompt } from './agent/systemPrompt.js';
 import { generateReport } from './agent/generateReport.js';
 import { getAvailableSlots, bookAppointment } from './utils/calendly.js';
 import { sendLeadReportEmail } from './utils/email.js';
+import chatRoutes from './api/chat.js';
+import calendarRoutes from './api/calendar.js';
 import whatsappRoutes from './api/whatsapp.js';
 import intakeRoutes from './api/intake.js';
+import reportsRoutes from './api/reports.js';
 import { initializeIntakeDatabase } from './db/intakeDb.js';
 
 dotenv.config();
@@ -38,10 +41,20 @@ app.use('/api/whatsapp', whatsappRoutes);
 // Intake system routes
 app.use('/api/intake', intakeRoutes);
 
+// Chat endpoint
+app.use('/api/chat', chatRoutes);
+
+// Calendar routes
+app.use('/api/calendar', calendarRoutes);
+
+// Reports routes
+app.use('/api/reports', reportsRoutes);
+
 // In-memory storage for leads when DB is not available
 const inMemoryLeads = new Map();
 const inMemoryMessages = new Map();
 
+// ... rest of the code remains the same ...
 // Chat endpoint
 app.post('/api/chat', async (req, res) => {
     try {
