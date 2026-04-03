@@ -19,6 +19,7 @@ import { sendLeadReportEmail } from './utils/email.js';
 import whatsappRoutes from './api/whatsapp.js';
 import intakeRoutes from './api/intake.js';
 import reportsRoutes from './api/reports.js';
+import portalRoutes from './routes/portal.js';
 import { initializeIntakeDatabase } from './db/intakeDb.js';
 import { spawn } from 'child_process';
 import { fileURLToPath } from 'url';
@@ -49,6 +50,9 @@ app.use('/api/intake', intakeRoutes);
 
 // Reports routes
 app.use('/api/reports', reportsRoutes);
+
+// Portal routes
+app.use('/api/portal', portalRoutes);
 
 // In-memory storage for leads when DB is not available
 const inMemoryLeads = new Map();
